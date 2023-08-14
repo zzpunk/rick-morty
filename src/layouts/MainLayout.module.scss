@@ -1,0 +1,11 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+
+  background: rgb(101, 118, 228);
+  background: linear-gradient(
+    0deg,
+    rgba(101, 118, 228, 1) 0%,
+    rgba(184, 160, 255, 1) 100%
+  );
+}
