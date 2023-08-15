@@ -1,23 +1,24 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { ParamsSearch } from 'modules/Filters/Filters.interfaces';
 
 interface IInitialState {
-  characters: any;
+  searchParams: ParamsSearch | null;
 }
 
 const initialState: IInitialState = {
-  characters: null,
+  searchParams: null,
 };
 
 const rickMortySlice = createSlice({
   name: 'rickMorty',
   initialState,
   reducers: {
-    setCharacters: (state, action: PayloadAction<any>) => {
-      state.characters = action.payload;
+    setSearchParams: (state, action: PayloadAction<null | ParamsSearch>) => {
+      state.searchParams = action.payload;
     },
   },
 });
 
-export const { setCharacters } = rickMortySlice.actions;
+export const { setSearchParams } = rickMortySlice.actions;
 
 export default rickMortySlice.reducer;

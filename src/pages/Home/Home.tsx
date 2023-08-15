@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import styles from './Home.module.scss';
-import { Filters } from '../../modules/Filters';
+import styles from 'pages/Home/Home.module.scss';
+import { Filters } from 'modules/Filters';
 
 type Props = {};
 

@@ -10,3 +10,10 @@ export enum GenderCharTypes {
   GENDERLESS = 'Genderless',
   UNKNOWN = 'unknown',
 }
+
+export interface ParamsSearch {
+  name: string;
+  species: string;
+  gender: GenderCharTypes;
+  status: StatusCharTypes;
+}

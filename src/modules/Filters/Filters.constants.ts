@@ -1,4 +1,7 @@
-import { StatusCharTypes, GenderCharTypes } from './Filters.interfaces';
+import {
+  StatusCharTypes,
+  GenderCharTypes,
+} from 'modules/Filters/Filters.interfaces';
 
 export const StatusesSelect = [
   { value: StatusCharTypes.ALIVE, option: 'Жив' },

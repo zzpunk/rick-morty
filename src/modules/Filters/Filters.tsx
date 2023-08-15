@@ -1,33 +1,54 @@
-import React, { FC, useState, useRef } from 'react';
-import styles from './Filters.module.scss';
+import React, { FC, useRef } from 'react';
+import styles from 'modules/Filters/Filters.module.scss';
 import { Input, Select, Button } from '@chakra-ui/react';
 import classNames from 'classnames';
-import { rickMortyApi } from '../../store/api';
-import { StatusesSelect, GenderSelect } from './Filters.constants';
+import {
+  StatusesSelect,
+  GenderSelect,
+} from 'modules/Filters/Filters.constants';
+import { pages } from 'routes/constants';
+import { useNavigate } from 'react-router-dom';
+import { GenderCharTypes, StatusCharTypes } from './Filters.interfaces';
+import { PagesTypes } from 'routes/Routes.interfaces';
+import { useDispatch } from 'react-redux';
+import { setSearchParams } from 'store/rickmorty.slice';
+import { useTypedSelector } from 'hooks/useTypedSelector';
 
 type Props = {
   stageOnCharacter?: boolean;
+  onSearch?: any;
 };
 
-export const Filters: FC<Props> = ({ stageOnCharacter }) => {
+export const Filters: FC<Props> = ({ stageOnCharacter, onSearch }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const searchParams = useTypedSelector(
+    (state) => state.rickMorty.searchParams
+  );
+
   const nameRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const speciesRef = useRef() as React.MutableRefObject<HTMLInputElement>;
   const statusRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
   const genderRef = useRef() as React.MutableRefObject<HTMLSelectElement>;
 
-  const [params, setParams] = useState('');
-
-  const [trigger, { data, isLoading, error }] =
-    rickMortyApi.useLazyGetCharactersQuery();
-
   const handle = () => {
-    // trigger('');
-    const name = nameRef.current.value;
-    const status = statusRef.current.value;
-    const gender = genderRef.current.value;
-    const species = speciesRef.current.value;
+    const params = {
+      name: nameRef.current.value,
+      status: statusRef.current.value as StatusCharTypes,
+      gender: genderRef.current.value as GenderCharTypes,
+      species: speciesRef.current.value,
+    };
 
-    console.log(name, status, gender, species);
+    if (stageOnCharacter) {
+      onSearch(params);
+    }
+
+    dispatch(setSearchParams(params));
+
+    navigate({
+      pathname: pages[PagesTypes.CHARACTERS].path,
+    });
   };
 
   return (
@@ -39,14 +60,16 @@ export const Filters: FC<Props> = ({ stageOnCharacter }) => {
       <div className={styles.box}>
         <Input
           ref={nameRef}
-          style={{ backgroundColor: 'white', minWidth: '300px' }}
+          style={{ backgroundColor: 'white' }}
           placeholder="Имя персонажа"
+          defaultValue={searchParams?.name}
         />
 
         <Select
           ref={statusRef}
           style={{ backgroundColor: 'white' }}
           placeholder="Статус"
+          defaultValue={searchParams?.status}
         >
           {StatusesSelect.map((item) => (
             <option key={item.value} value={item.value}>
@@ -57,12 +80,14 @@ export const Filters: FC<Props> = ({ stageOnCharacter }) => {
 
         <Input
           ref={speciesRef}
-          style={{ backgroundColor: 'white', minWidth: '300px' }}
-          placeholder="Вид. Например: Human, Alien"
+          defaultValue={searchParams?.species}
+          style={{ backgroundColor: 'white' }}
+          placeholder="Вид"
         />
 
         <Select
           ref={genderRef}
+          defaultValue={searchParams?.gender}
           style={{ backgroundColor: 'white' }}
           placeholder="Пол"
         >
@@ -73,7 +98,11 @@ export const Filters: FC<Props> = ({ stageOnCharacter }) => {
           ))}
         </Select>
 
-        {stageOnCharacter && <Button>Поиск</Button>}
+        {stageOnCharacter && (
+          <Button style={{ width: '250px' }} onClick={handle}>
+            Поиск
+          </Button>
+        )}
       </div>
 
       {!stageOnCharacter && (

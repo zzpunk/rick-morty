@@ -1,0 +1,16 @@
+.main {
+  width: 400px;
+  flex: 1 1 400px;
+
+  background-color: white;
+  padding: 15px;
+  border-radius: 13px;
+}
+
+.avatar {
+  width: 160px;
+  & img {
+    border: 5px solid #eeeeee;
+    border-radius: 10px;
+  }
+}

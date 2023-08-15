@@ -1,4 +1,4 @@
-import { PagesTypes, IPageData } from './Routes.interfaces';
+import { PagesTypes, IPageData } from 'routes/Routes.interfaces';
 
 export const pages: { [key in PagesTypes]: IPageData } = {
   [PagesTypes.HOME]: {

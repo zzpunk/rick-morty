@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import styles from './MainLayout.module.scss';
+import styles from 'layouts/MainLayout.module.scss';
 
 type Props = {
   children: JSX.Element;
