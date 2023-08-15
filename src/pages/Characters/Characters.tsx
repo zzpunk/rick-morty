@@ -4,17 +4,25 @@ import { ParamsSearch } from 'modules/Filters/Filters.interfaces';
 import { CardCharacter } from 'components/CardCharacter/CardCharacter';
 import axios from 'axios';
 import { useTypedSelector } from 'hooks/useTypedSelector';
-
+import { useDispatch } from 'react-redux';
+import { setActiveCharacter } from 'store/rickmorty.slice';
 import styles from './Characters.module.scss';
+import { DetailCard } from 'components/DetailCard';
+import { Spinner } from '@chakra-ui/react';
+import { ICardData } from './Characters.interfaces';
 
 export const Characters: FC = React.memo(() => {
+  const dispatch = useDispatch();
+
   const [characters, setCharacters] = useState<any[]>([]);
   const [isFetching, setFetching] = useState<boolean>(false);
   const [nextPage, setNextPage] = useState('');
   const [isEmpty, setEmpty] = useState(false);
+  const [activeChar, setActiveChar] = useState<null | ICardData>(null);
+  const [isOpenCard, setOpenCard] = useState<boolean>(false);
 
-  const searchParams = useTypedSelector(
-    (state) => state.rickMorty.searchParams
+  const { searchParams, activeCharacter } = useTypedSelector(
+    (state) => state.rickMorty
   );
 
   const handleGetCharacters = async (params: ParamsSearch) => {
@@ -28,6 +36,51 @@ export const Characters: FC = React.memo(() => {
       setEmpty(false);
     } catch (err) {
       setEmpty(true);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const handleOpenDetailChar = async (id: string) => {
+    const cachedEl = activeCharacter.find((item) => item.id === id);
+
+    if (cachedEl) {
+      //Если уже выбирали карточку
+      setActiveChar(cachedEl);
+      setOpenCard(true);
+    } else {
+      let dataCard: ICardData = {
+        numberEpisode: '',
+        nameEpisode: '',
+        airDate: '',
+        lastLocation: '',
+        dimension: '',
+        id: id,
+        nameCharacter: '',
+      };
+
+      const active = characters.find((item: { id: string }) => item.id === id);
+
+      const lastEpisodeUrl = active.episode.at(-1);
+      const locationUrl = active.location.url;
+      const nameCharacter = active.name;
+
+      dataCard.nameCharacter = nameCharacter;
+
+      await axios.get(lastEpisodeUrl).then((res) => {
+        dataCard.nameEpisode = res.data.name;
+        dataCard.airDate = res.data.air_date;
+        dataCard.numberEpisode = res.data.id;
+      });
+
+      await axios.get(locationUrl).then((res) => {
+        dataCard.lastLocation = res.data.name;
+        dataCard.dimension = res.data.dimension;
+      });
+
+      dispatch(setActiveCharacter([...activeCharacter, dataCard]));
+      setActiveChar(dataCard);
+      setOpenCard(true);
     }
   };
 
@@ -37,7 +90,6 @@ export const Characters: FC = React.memo(() => {
         (e.target.documentElement.scrollTop + window.innerHeight) <
       100
     ) {
-      console.log('scroll');
       setFetching(true);
     }
   };
@@ -61,6 +113,10 @@ export const Characters: FC = React.memo(() => {
         })
         .finally(() => setFetching(false));
     }
+
+    if (!nextPage) {
+      setFetching(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFetching, nextPage]);
 
@@ -72,15 +128,46 @@ export const Characters: FC = React.memo(() => {
 
   return (
     <div className={styles.wrapper}>
-      <Filters onSearch={handleGetCharacters} stageOnCharacter />
+      <div className={styles.container}>
+        <div className={styles.filters}>
+          <Filters onSearch={handleGetCharacters} stageOnCharacter />
+        </div>
 
-      {isEmpty && <div>Пусто</div>}
+        {isEmpty ? (
+          <div>Пусто</div>
+        ) : (
+          <div>
+            <div className={styles['card-group']}>
+              {characters?.map((item) => (
+                <CardCharacter
+                  onOpenDetail={() => handleOpenDetailChar(item.id)}
+                  character={item}
+                  key={item?.id}
+                />
+              ))}
+            </div>
 
-      <div className={styles['card-group']}>
-        {characters?.map((item) => (
-          <CardCharacter character={item} key={item?.id} />
-        ))}
+            {isFetching && (
+              <div>
+                <Spinner
+                  thickness="4px"
+                  speed="0.65s"
+                  emptyColor="gray.200"
+                  color="blue.500"
+                  size="xl"
+                />
+              </div>
+            )}
+          </div>
+        )}
       </div>
+
+      {isOpenCard && activeChar && (
+        <DetailCard
+          onClose={() => setOpenCard(false)}
+          activeData={activeChar}
+        />
+      )}
     </div>
   );
 });

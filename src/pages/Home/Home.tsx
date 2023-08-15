@@ -2,9 +2,7 @@ import React, { FC } from 'react';
 import styles from 'pages/Home/Home.module.scss';
 import { Filters } from 'modules/Filters';
 
-type Props = {};
-
-export const Home: FC<Props> = () => {
+export const Home: FC = () => {
   return (
     <div className={styles.wrapper}>
       <Filters />

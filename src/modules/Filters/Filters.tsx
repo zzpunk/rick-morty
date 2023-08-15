@@ -13,6 +13,7 @@ import { PagesTypes } from 'routes/Routes.interfaces';
 import { useDispatch } from 'react-redux';
 import { setSearchParams } from 'store/rickmorty.slice';
 import { useTypedSelector } from 'hooks/useTypedSelector';
+import logo from 'assets/logo.png';
 
 type Props = {
   stageOnCharacter?: boolean;
@@ -57,46 +58,56 @@ export const Filters: FC<Props> = ({ stageOnCharacter, onSearch }) => {
         [styles.characters]: stageOnCharacter,
       })}
     >
+      {!stageOnCharacter && <img src={logo} alt="logo" />}
+
       <div className={styles.box}>
-        <Input
-          ref={nameRef}
-          style={{ backgroundColor: 'white' }}
-          placeholder="Имя персонажа"
-          defaultValue={searchParams?.name}
-        />
+        <div>
+          <Input
+            ref={nameRef}
+            style={{ backgroundColor: 'white' }}
+            placeholder="Имя персонажа"
+            defaultValue={searchParams?.name}
+          />
+        </div>
 
-        <Select
-          ref={statusRef}
-          style={{ backgroundColor: 'white' }}
-          placeholder="Статус"
-          defaultValue={searchParams?.status}
-        >
-          {StatusesSelect.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.option}
-            </option>
-          ))}
-        </Select>
+        <div>
+          <Select
+            ref={statusRef}
+            style={{ backgroundColor: 'white' }}
+            placeholder="Статус"
+            defaultValue={searchParams?.status}
+          >
+            {StatusesSelect.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.option}
+              </option>
+            ))}
+          </Select>
+        </div>
 
-        <Input
-          ref={speciesRef}
-          defaultValue={searchParams?.species}
-          style={{ backgroundColor: 'white' }}
-          placeholder="Вид"
-        />
+        <div>
+          <Input
+            ref={speciesRef}
+            defaultValue={searchParams?.species}
+            style={{ backgroundColor: 'white' }}
+            placeholder="Вид"
+          />
+        </div>
 
-        <Select
-          ref={genderRef}
-          defaultValue={searchParams?.gender}
-          style={{ backgroundColor: 'white' }}
-          placeholder="Пол"
-        >
-          {GenderSelect.map((item) => (
-            <option key={item.value} value={item.value}>
-              {item.option}
-            </option>
-          ))}
-        </Select>
+        <div>
+          <Select
+            ref={genderRef}
+            defaultValue={searchParams?.gender}
+            style={{ backgroundColor: 'white' }}
+            placeholder="Пол"
+          >
+            {GenderSelect.map((item) => (
+              <option key={item.value} value={item.value}>
+                {item.option}
+              </option>
+            ))}
+          </Select>
+        </div>
 
         {stageOnCharacter && (
           <Button style={{ width: '250px' }} onClick={handle}>

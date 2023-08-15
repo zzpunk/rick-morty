@@ -1,12 +1,31 @@
 .wrapper {
-  margin: auto;
+  position: relative;
+  margin: 0 auto;
   max-width: 1200px;
 
+  display: grid;
+  grid-template-columns: auto auto;
+
+  gap: 30px;
   padding: 0 30px 0 30px;
+}
+
+.container {
+  position: relative;
 }
 
 .card-group {
   display: flex;
   flex-wrap: wrap;
   gap: 50px;
+
+  padding-left: 23px;
+  // padding-right: 35px;
+  margin-top: 40px;
+}
+
+.filters {
+  position: sticky;
+  z-index: 100;
+  top: 15px;
 }

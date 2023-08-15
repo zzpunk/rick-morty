@@ -3,7 +3,6 @@ import AppRoutes from './routes/Routes';
 import { MainLayout } from './layouts/MainLayout';
 import { ChakraProvider } from '@chakra-ui/react';
 import './styles/index.scss';
-import './styles/_variables.scss';
 
 function App() {
   return (
