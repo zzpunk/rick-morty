@@ -1,6 +1,6 @@
 import React, { FC, useRef } from 'react';
 import styles from 'modules/Filters/Filters.module.scss';
-import { Input, Select, Button } from '@chakra-ui/react';
+import { Input, Select, Button, color } from '@chakra-ui/react';
 import classNames from 'classnames';
 import {
   StatusesSelect,
@@ -110,14 +110,19 @@ export const Filters: FC<Props> = ({ stageOnCharacter, onSearch }) => {
         </div>
 
         {stageOnCharacter && (
-          <Button style={{ width: '250px' }} onClick={handle}>
+          <Button
+            bgColor={'#db67ca'}
+            color={'white'}
+            style={{ width: '250px' }}
+            onClick={handle}
+          >
             Поиск
           </Button>
         )}
       </div>
 
       {!stageOnCharacter && (
-        <Button onClick={handle} size="lg">
+        <Button bgColor={'#db67ca'} color={'white'} onClick={handle} size="lg">
           Поиск
         </Button>
       )}

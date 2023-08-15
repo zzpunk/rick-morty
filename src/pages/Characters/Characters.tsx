@@ -134,7 +134,7 @@ export const Characters: FC = React.memo(() => {
         </div>
 
         {isEmpty ? (
-          <div>Пусто</div>
+          <div className={styles.empty}>Ничего не найдено</div>
         ) : (
           <div>
             <div className={styles['card-group']}>
