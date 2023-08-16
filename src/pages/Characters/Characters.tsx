@@ -73,10 +73,15 @@ export const Characters: FC = React.memo(() => {
         dataCard.numberEpisode = res.data.id;
       });
 
-      await axios.get(locationUrl).then((res) => {
-        dataCard.lastLocation = res.data.name;
-        dataCard.dimension = res.data.dimension;
-      });
+      if (locationUrl !== '') {
+        await axios.get(locationUrl).then((res) => {
+          dataCard.lastLocation = res.data.name;
+          dataCard.dimension = res.data.dimension;
+        });
+      } else {
+        dataCard.lastLocation = 'unknown';
+        dataCard.dimension = 'unknown';
+      }
 
       dispatch(setActiveCharacter([...activeCharacter, dataCard]));
       setActiveChar(dataCard);
